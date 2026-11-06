@@ -1,0 +1,793 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AuditaIA — Auditor de Automação com IA, Produtividade & Governança LGPD</title>
+  <meta name="description" content="Calcule quanto sua empresa economiza automatizando processos com IA e No-Code e verifique a governança de segurança e LGPD." />
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 48 48'%3E%3Crect x='1' y='1' width='46' height='46' rx='11' fill='%23C6F432'/%3E%3Ccircle cx='21' cy='21' r='11' fill='none' stroke='%230B1220' stroke-width='4'/%3E%3Cpath d='m29.5 29.5 8 8' stroke='%230B1220' stroke-width='4.5' stroke-linecap='round'/%3E%3C/svg%3E" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    :root{
+      --navy:#0B1220; --navy-2:#121B2D; --navy-3:#1A2436;
+      --lime:#C6F432; --ink:#0F172A; --muted:#5B6577; --line:#E4E7EC; --bg:#F6F7F9;
+      --blue:#2563EB;
+    }
+    *{ box-sizing:border-box; }
+    body{ margin:0; font-family:'Inter',system-ui,sans-serif; background:var(--bg); color:var(--ink); font-feature-settings:'tnum'; }
+    .card{ background:#fff; border:1px solid var(--line); border-radius:12px; }
+    .label{ font-size:13px; color:var(--muted); }
+    .h2{ font-size:16px; font-weight:600; }
+    .field{ width:100%; margin-top:6px; padding:10px 12px; border:1px solid #D0D5DD; border-radius:8px; font:inherit; font-size:14px; background:#fff; color:var(--ink); }
+    .field:focus{ outline:2px solid #BFD3FE; border-color:var(--blue); }
+    .btn{ font:inherit; font-size:14px; font-weight:600; padding:10px 14px; border-radius:8px; cursor:pointer; display:inline-flex; align-items:center; gap:8px; min-height:42px; }
+    .btn-dark{ background:var(--navy); color:#fff; border:1px solid var(--navy); }
+    .btn-dark:hover{ background:#1A2436; }
+    .btn-light{ background:#fff; color:var(--ink); border:1px solid #D0D5DD; }
+    .btn-light:hover{ background:#F9FAFB; }
+    .btn-lime{ background:var(--lime); color:var(--navy); border:1px solid var(--lime); }
+    .btn-lime:hover{ background:#D4FA5C; }
+    .pill{ display:inline-block; font-size:12px; font-weight:600; padding:2px 8px; border-radius:6px; white-space:nowrap; }
+    .p-red{ background:#FEECEC; color:#B42318; } .p-amber{ background:#FEF0C7; color:#93370D; }
+    .p-blue{ background:#EAF1FF; color:#1D4ED8; } .p-green{ background:#E8F7EE; color:#067647; }
+    .opt input{ position:absolute; opacity:0; pointer-events:none; }
+    .opt span{ display:block; height:100%; font-size:13px; line-height:1.35; border:1px solid #D0D5DD; border-radius:8px; padding:9px 11px; background:#fff; cursor:pointer; transition:.15s; }
+    .opt span:hover{ border-color:#98A2B3; }
+    .opt input:checked + span{ background:var(--navy); color:#fff; border-color:var(--navy); }
+    .opt input:focus-visible + span{ outline:2px solid var(--blue); outline-offset:2px; }
+    .chk{ display:flex; gap:10px; align-items:flex-start; padding:10px 12px; border:1px solid var(--line); border-radius:8px; cursor:pointer; font-size:14px; }
+    .chk:hover{ background:#F9FAFB; }
+    .chk input{ width:18px; height:18px; margin-top:1px; accent-color:var(--navy); flex-shrink:0; }
+    input[type=range]{ accent-color:var(--navy); width:100%; }
+    .bar{ height:6px; background:#EEF0F3; border-radius:999px; overflow:hidden; }
+    .bar > div{ height:100%; border-radius:999px; }
+    .step{ display:flex; align-items:center; justify-content:space-between; padding:10px; border-radius:8px; color:#CBD5E1; text-decoration:none; font-size:14px; }
+    .step:hover{ background:var(--navy-2); }
+    .step.ativo{ background:var(--navy-3); color:#fff; font-weight:600; }
+    .step .st{ font-size:12px; color:#8391A7; }
+    .step .st.ok{ color:var(--lime); }
+    .tabela-row{ display:grid; grid-template-columns:32px 2fr 2.4fr 1.4fr 90px 100px; align-items:center; gap:8px; padding:12px 20px; font-size:14px; border-bottom:1px solid #F0F2F5; }
+    .tabela-row:last-child{ border-bottom:0; }
+    @media (max-width: 900px){
+      .tabela-row{ grid-template-columns:24px 1fr 90px; }
+      .tabela-row .hide-sm{ display:none; }
+    }
+    @media print{
+      .no-print{ display:none !important; }
+      body{ background:#fff; }
+      main{ margin:0 !important; }
+      .card, .print-keep{ break-inside:avoid; }
+      .print-color{ -webkit-print-color-adjust:exact; print-color-adjust:exact; }
+      #laudo{ display:block !important; }
+      #laudo > *{ margin-bottom:16px; }
+      #rodape{ flex-direction:column !important; }
+      @page{ margin:14mm; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ===================== BARRA LATERAL (marca + etapas) ===================== -->
+<aside class="no-print hidden lg:flex fixed inset-y-0 left-0 w-[248px] flex-col gap-7 px-3.5 py-5" style="background:var(--navy)">
+  <a href="#topo" class="flex items-center gap-2.5 px-2 py-1 no-underline" aria-label="AuditaIA, início">
+    <svg width="32" height="32" viewBox="0 0 48 48" fill="none" aria-hidden="true"><rect x="1" y="1" width="46" height="46" rx="11" fill="#C6F432"/><circle cx="21" cy="21" r="11" stroke="#0B1220" stroke-width="4"/><path d="m29.5 29.5 8 8" stroke="#0B1220" stroke-width="4.5" stroke-linecap="round"/><path d="m16 21 3.8 3.8L26.5 18" stroke="#0B1220" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    <span class="text-lg font-bold text-white tracking-tight">AuditaIA</span>
+  </a>
+  <nav class="flex flex-col gap-0.5" aria-label="Etapas da auditoria">
+    <div class="text-[11px] font-semibold tracking-wider px-2.5 pb-2" style="color:#8391A7">AUDITORIA</div>
+    <a href="#empresa" class="step" data-step="1">1. Empresa<span class="st" id="st1">Pendente</span></a>
+    <a href="#tarefas" class="step" data-step="2">2. Tarefas manuais<span class="st" id="st2">Pendente</span></a>
+    <a href="#diagnostico" class="step" data-step="3">3. Diagnóstico<span class="st" id="st3">Pendente</span></a>
+    <a href="#laudo-ancora" class="step" data-step="4">4. Laudo<span class="st" id="st4">Pendente</span></a>
+  </nav>
+  <div class="mt-auto rounded-[10px] p-3 text-xs leading-relaxed" style="background:var(--navy-2); color:#A7B3C6">
+    <div class="text-white font-semibold mb-1">Privacy by Design · LGPD</div>
+    Os cálculos rodam só no seu navegador. Nenhum dado sai deste dispositivo.
+  </div>
+</aside>
+
+<main id="topo" class="lg:ml-[248px] min-h-screen flex flex-col">
+
+  <!-- ===================== TOPO ===================== -->
+  <header class="no-print sticky top-0 z-20 bg-white border-b" style="border-color:var(--line)">
+    <div class="px-4 md:px-7 h-16 flex items-center justify-between gap-3">
+      <div class="flex items-center gap-2.5 min-w-0">
+        <svg class="lg:hidden shrink-0" width="28" height="28" viewBox="0 0 48 48" fill="none" aria-hidden="true"><rect x="1" y="1" width="46" height="46" rx="11" fill="#C6F432"/><circle cx="21" cy="21" r="11" stroke="#0B1220" stroke-width="4"/><path d="m29.5 29.5 8 8" stroke="#0B1220" stroke-width="4.5" stroke-linecap="round"/><path d="m16 21 3.8 3.8L26.5 18" stroke="#0B1220" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <div class="text-sm truncate" style="color:var(--muted)"><span class="hidden sm:inline">Auditorias <span style="color:#98A2B3">/</span> </span><span id="breadcrumb" class="font-semibold" style="color:var(--ink)">Nova auditoria</span></div>
+      </div>
+      <div class="flex gap-2 shrink-0">
+        <button id="btnDemo" class="btn btn-light" type="button">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M5.6 18.4l2.1-2.1M16.3 7.7l2.1-2.1"/></svg>
+          <span class="hidden sm:inline">Carregar Caso Exemplo (Demo)</span><span class="sm:hidden">Demo</span>
+        </button>
+        <button id="btnPrint" class="btn btn-dark" type="button">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9V3h12v6"/><rect x="4" y="9" width="16" height="8" rx="2"/><path d="M7 14h10v7H7z"/></svg>
+          <span class="hidden sm:inline">Imprimir / Salvar Laudo em PDF</span><span class="sm:hidden">PDF</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <div class="px-4 md:px-7 py-6 flex flex-col gap-5 max-w-[1240px] w-full">
+
+    <!-- ===================== INTRO ===================== -->
+    <div class="no-print">
+      <h1 class="text-2xl font-bold tracking-tight m-0">Auditor de Automação com IA &amp; Governança LGPD</h1>
+      <p class="text-sm mt-1 mb-0" style="color:var(--muted)">Descubra quantas horas e quanto dinheiro sua empresa pode economizar automatizando tarefas com IA e No-Code, e se ela está pronta para fazer isso com segurança.</p>
+    </div>
+
+    <!-- ===================== 1. EMPRESA (RF01) ===================== -->
+    <section id="empresa" class="no-print card p-5 scroll-mt-20">
+      <div class="h2">1. Identificação da empresa</div>
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mt-4">
+        <label class="md:col-span-2 text-sm font-medium">Nome da empresa
+          <input id="empresaNome" class="field" type="text" placeholder="Ex: Clínica Exemplo Ltda." autocomplete="organization" />
+        </label>
+        <label class="text-sm font-medium">Setor de atuação
+          <select id="setor" class="field">
+            <option value="">Selecione…</option>
+            <option>Varejo</option><option>Indústria</option><option>Serviços</option><option>Saúde</option>
+            <option>Educação</option><option>Agronegócio</option><option>Tecnologia</option><option>Outro</option>
+          </select>
+        </label>
+        <label class="text-sm font-medium">Nº de colaboradores
+          <input id="colaboradores" class="field" type="number" min="1" placeholder="Ex: 25" />
+        </label>
+      </div>
+      <div id="porteTxt" class="text-xs mt-2" style="color:var(--muted)"></div>
+    </section>
+
+    <!-- ===================== 2. TAREFAS (calculadora) ===================== -->
+    <section id="tarefas" class="no-print card p-5 scroll-mt-20">
+      <div class="flex flex-col md:flex-row md:items-end md:justify-between gap-4">
+        <div>
+          <div class="h2">2. Tarefas manuais repetitivas</div>
+          <p class="label mt-1 mb-0">Marque o que a equipe faz na mão e quantas horas por semana isso consome (somando todas as pessoas).</p>
+        </div>
+        <label class="text-sm font-medium md:w-56">Custo médio da hora (R$)
+          <input id="custoHora" class="field" type="number" min="1" value="35" />
+          <span class="text-xs font-normal" style="color:var(--muted)">Salário + encargos ÷ 160 h</span>
+        </label>
+      </div>
+      <div id="listaTarefas" class="grid grid-cols-1 md:grid-cols-2 gap-3 mt-4"></div>
+      <div class="mt-3 text-sm" style="color:var(--muted)">Total informado: <b id="totalHorasSem" style="color:var(--ink)">0</b> h/semana</div>
+      <div id="avisoHoras" class="hidden mt-2 text-sm rounded-lg px-3 py-2" style="background:#FFF6ED; color:#7A2E0E; border:1px solid #F9DBAF" role="alert"></div>
+    </section>
+
+    <!-- ===================== 3. DIAGNÓSTICO (RF02) ===================== -->
+    <section id="diagnostico" class="no-print card p-5 scroll-mt-20">
+      <div class="h2">3. Diagnóstico de prontidão e governança</div>
+      <p class="label mt-1 mb-0">Responda às perguntas dos pilares e marque os controles de segurança que a empresa já tem.</p>
+      <div id="listaPerguntas" class="flex flex-col gap-5 mt-5"></div>
+      <div class="mt-6">
+        <div class="flex items-center justify-between">
+          <div class="text-sm font-semibold">Governança, Ética &amp; LGPD — controles ativos</div>
+          <div class="text-sm" style="color:var(--muted)"><b id="qtdControles" style="color:var(--ink)">0</b> de 8</div>
+        </div>
+        <div id="listaControles" class="grid grid-cols-1 md:grid-cols-2 gap-2 mt-3"></div>
+      </div>
+      <div class="mt-6 flex flex-wrap items-center gap-3">
+        <button id="btnGerar" class="btn btn-dark" type="button">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12h4l3-8 4 16 3-8h4"/></svg>
+          Gerar auditoria
+        </button>
+        <span id="msgErro" class="text-sm" style="color:#B42318" role="alert"></span>
+      </div>
+    </section>
+
+    <!-- ===================== 4. LAUDO (RF03, RF04, RF05) ===================== -->
+    <div id="laudo-ancora" class="scroll-mt-20"></div>
+    <section id="laudo" class="hidden flex-col gap-5" aria-live="polite">
+
+      <!-- Cabeçalho do laudo (aparece também na impressão) -->
+      <div class="flex flex-col md:flex-row md:items-end md:justify-between gap-3">
+        <div>
+          <div class="flex items-center gap-2 mb-1">
+            <svg class="print-color" width="24" height="24" viewBox="0 0 48 48" fill="none" aria-hidden="true"><rect x="1" y="1" width="46" height="46" rx="11" fill="#C6F432"/><circle cx="21" cy="21" r="11" stroke="#0B1220" stroke-width="4"/><path d="m29.5 29.5 8 8" stroke="#0B1220" stroke-width="4.5" stroke-linecap="round"/><path d="m16 21 3.8 3.8L26.5 18" stroke="#0B1220" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            <span class="text-sm font-semibold">AuditaIA · Laudo de Auditoria</span>
+          </div>
+          <h2 id="lEmpresa" class="text-2xl font-bold tracking-tight m-0"></h2>
+          <div id="lMeta" class="text-sm mt-1" style="color:var(--muted)"></div>
+        </div>
+      </div>
+
+      <!-- Linha 1: Score + KPIs -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-[1.25fr_1fr_1fr_1fr] gap-4">
+        <div class="card p-5 flex items-center gap-5">
+          <svg width="104" height="104" viewBox="0 0 104 104" role="img" id="anelScore" aria-label="Score geral">
+            <circle cx="52" cy="52" r="44" fill="none" stroke="#EEF0F3" stroke-width="10"/>
+            <circle id="anelArco" class="print-color" cx="52" cy="52" r="44" fill="none" stroke="#DC2626" stroke-width="10" stroke-linecap="round" stroke-dasharray="0 277" transform="rotate(-90 52 52)"/>
+            <text id="anelTxt" x="52" y="59" text-anchor="middle" font-family="Inter" font-size="22" font-weight="700" fill="#0F172A">0%</text>
+          </svg>
+          <div>
+            <div id="lScoreTxt" class="label">Score geral (0–100%)</div>
+            <div id="lClasse" class="text-xl font-bold mt-0.5"></div>
+            <span class="pill p-blue mt-2 print-color">Meta: 80%</span>
+          </div>
+        </div>
+        <div class="card p-5">
+          <div class="label">Horas liberadas / mês</div>
+          <div id="kHoras" class="text-3xl font-bold mt-2"></div>
+          <div id="kHorasSub" class="label mt-1.5"></div>
+        </div>
+        <div class="card p-5">
+          <div class="label">Economia bruta / ano</div>
+          <div id="kBruta" class="text-3xl font-bold mt-2"></div>
+          <div id="kBrutaSub" class="label mt-1.5"></div>
+        </div>
+        <div class="rounded-xl p-5 text-white print-color" style="background:var(--navy)">
+          <div class="text-[13px]" style="color:#A7B3C6">Ganho líquido / ano</div>
+          <div id="kLiquido" class="text-3xl font-bold mt-2" style="color:var(--lime)"></div>
+          <div id="kLiquidoSub" class="text-[13px] mt-1.5" style="color:#A7B3C6"></div>
+        </div>
+      </div>
+
+      <!-- Cards com a nota individual de cada pilar -->
+      <div id="lCardsPilares" class="grid grid-cols-2 lg:grid-cols-4 gap-4"></div>
+
+      <!-- Veredito: ganho x risco -->
+      <div id="veredito" class="rounded-xl px-5 py-4 flex gap-3 items-start border print-color print-keep"></div>
+
+      <!-- Linha 2: Pilares + Controles -->
+      <div class="grid grid-cols-1 lg:grid-cols-[1fr_1.3fr] gap-4">
+        <div class="card p-5 flex flex-col gap-4">
+          <div class="h2">Maturidade por pilar</div>
+          <div id="lPilares" class="flex flex-col gap-4"></div>
+          <div class="text-xs pt-3 border-t" style="color:var(--muted); border-color:#EEF0F3">Crítico &lt; 40% · Em transição 40–59% · Estruturado 60–79% · Líder digital 80%+</div>
+        </div>
+        <div class="card p-5 flex flex-col gap-3">
+          <div class="flex justify-between items-center">
+            <div class="h2">Controles de segurança &amp; LGPD</div>
+            <div class="text-sm" style="color:var(--muted)"><b id="lQtdControles" style="color:var(--ink)"></b> ativos</div>
+          </div>
+          <div class="bar print-color"><div id="lBarControles" style="background:#16A34A; width:0"></div></div>
+          <div id="lControles" class="grid grid-cols-1 sm:grid-cols-2 gap-x-5 text-sm"></div>
+        </div>
+      </div>
+
+      <!-- Linha 3: Gráficos (RF04) -->
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+        <div class="card p-5 print-keep">
+          <div class="h2">Radar dos 4 pilares</div>
+          <div class="label mt-0.5">Nota da empresa x meta de Líder Digital (80%)</div>
+          <div class="relative h-[300px] mt-3"><canvas id="graficoRadar" aria-label="Gráfico radar com a nota de cada pilar" role="img"></canvas></div>
+        </div>
+        <div class="card p-5 print-keep">
+          <div class="h2">Horas por mês, por tarefa</div>
+          <div class="label mt-0.5">Quanto continua manual e quanto a automação libera</div>
+          <div class="relative h-[300px] mt-3"><canvas id="graficoBarras" aria-label="Gráfico de barras com horas manuais e liberadas por tarefa" role="img"></canvas></div>
+        </div>
+      </div>
+
+      <!-- Linha 4: Oportunidades -->
+      <div class="card overflow-hidden print-keep">
+        <div class="px-5 py-4 flex flex-wrap gap-3 justify-between items-center border-b" style="border-color:var(--line)">
+          <div class="h2">Oportunidades de automação <span class="font-normal text-sm" style="color:var(--muted)">· maior ganho primeiro</span></div>
+          <div class="flex gap-3.5 text-xs" style="color:var(--muted)">
+            <span class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-sm print-color" style="background:#CBD5E1"></span>Continua manual</span>
+            <span class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-sm print-color" style="background:#2563EB"></span>Automatizável</span>
+          </div>
+        </div>
+        <div class="tabela-row font-medium text-[13px]" style="color:var(--muted); background:#FAFBFC">
+          <span>#</span><span>Tarefa</span><span class="hide-sm">Como automatizar</span><span class="hide-sm">Horas/mês</span><span class="hide-sm text-right">Liberadas</span><span class="text-right">R$/mês</span>
+        </div>
+        <div id="lTabela"></div>
+      </div>
+
+      <!-- Linha 5: Guia de boas práticas (RF05) -->
+      <div class="card p-5">
+        <div class="h2">Guia de boas práticas do especialista</div>
+        <div class="label mt-0.5">Recomendações geradas a partir das respostas, do pilar mais fraco para o mais forte.</div>
+        <div id="lGuia" class="grid grid-cols-1 lg:grid-cols-2 gap-4 mt-4"></div>
+      </div>
+    </section>
+  </div>
+
+  <!-- ===================== RODAPÉ (RNF03) ===================== -->
+  <footer class="mt-auto border-t bg-white" style="border-color:var(--line)">
+    <div id="rodape" class="px-4 md:px-7 py-5 max-w-[1240px] flex flex-col md:flex-row md:justify-between gap-3 text-sm" style="color:var(--muted)">
+      <p class="m-0 flex gap-2 items-start">
+        <svg class="shrink-0 mt-0.5" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#067647" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3 4 6v6c0 5 3.5 8 8 9 4.5-1 8-4 8-9V6z"/><path d="m9 12 2 2 4-4"/></svg>
+        <span><b style="color:var(--ink)">Privacy by Design (LGPD):</b> Todos os cálculos são processados localmente no seu navegador. Nenhum dado é enviado ou armazenado em bancos de dados externos.</span>
+      </p>
+      <p class="m-0 shrink-0">Especialista: <b style="color:var(--ink)">Arthur Bonfim</b> · UC Exploração Digital e Fundamentos Tecnológicos</p>
+    </div>
+  </footer>
+</main>
+
+<script>
+// ================================================================
+// 1) BASE DE CONHECIMENTO
+// ================================================================
+const SEMANAS_MES = 4.33;
+const CUSTO_FERRAMENTA_MES = 150; // R$ por tarefa automatizada (estimativa)
+
+const TAREFAS = [
+  { id:'t1', nome:'Digitação de dados entre sistemas e planilhas', curto:'Digitação', potencial:0.70, como:'Integração No-Code (Make, Zapier ou n8n) ligando formulários, planilhas e ERP.' },
+  { id:'t2', nome:'Responder dúvidas repetitivas de clientes', curto:'Atendimento', potencial:0.60, como:'Assistente de IA com respostas aprovadas + passagem para humano nos casos difíceis.' },
+  { id:'t3', nome:'Montar relatórios e planilhas gerenciais', curto:'Relatórios', potencial:0.75, como:'Dashboard automático (Looker Studio / Power BI) + IA para resumir os números.' },
+  { id:'t4', nome:'Emitir notas, boletos e cobranças', curto:'Cobranças', potencial:0.65, como:'Automação no ERP/financeiro com envio automático de cobrança e lembrete.' },
+  { id:'t5', nome:'Triagem de e-mails e documentos', curto:'E-mails', potencial:0.55, como:'Regras automáticas + IA para classificar, resumir e encaminhar ao setor certo.' },
+  { id:'t6', nome:'Agendamentos e confirmações', curto:'Agenda', potencial:0.80, como:'Agenda online com confirmação automática por WhatsApp/e-mail.' }
+];
+
+const PILARES = [
+  { id:'nuvem', nome:'Infraestrutura & Nuvem' },
+  { id:'sistemas', nome:'Sistemas ERP/CRM & Dados' },
+  { id:'ia', nome:'IA & Automação No-Code' },
+  { id:'seguranca', nome:'Governança, Ética & LGPD' }
+];
+
+const PERGUNTAS = [
+  { id:'q1', pilar:'nuvem', texto:'Onde ficam os sistemas e arquivos da empresa?', opcoes:[
+    'Num computador comum usado como "servidor"','Servidor local, sem redundância','Parte local, parte na nuvem','Maioria na nuvem (SaaS)','100% na nuvem, com backup e monitoramento'] },
+  { id:'q2', pilar:'nuvem', texto:'Como é feito o backup dos dados?', opcoes:[
+    'Não há backup','Manual, em HD externo','Automático, em um só local','Automático na nuvem','Regra 3-2-1 com teste de restauração'] },
+  { id:'q3', pilar:'sistemas', texto:'Como a empresa controla vendas, clientes e financeiro?', opcoes:[
+    'Papel ou WhatsApp','Planilhas soltas','Um sistema isolado','ERP e CRM pouco integrados','ERP e CRM integrados (fonte única)'] },
+  { id:'q4', pilar:'sistemas', texto:'Os sistemas permitem integração (API) com outras ferramentas?', opcoes:[
+    'Não sei / não temos sistema','Não permitem','Só exportam planilhas','Têm API, mas não usamos','Integramos via API'] },
+  { id:'q5', pilar:'ia', texto:'Como a equipe usa IA Generativa hoje?', opcoes:[
+    'Não usa','Cada um usa do seu jeito','Em algumas tarefas, sem regras','Em processos definidos, com revisão','Integrada aos processos, com métricas'] },
+  // q6 tem um mapa de pontos próprio: "Não, vai direto" (IA sem revisão) é mais arriscado
+  // que "Não usamos IA", então vale 0 e "Não usamos IA" vale 1. A ordem visual não muda.
+  { id:'q6', pilar:'ia', texto:'Alguém revisa o que a IA ou a automação produz antes de ir para o cliente?', opcoes:[
+    'Não usamos IA','Não, vai direto','Às vezes','Sim, na maioria dos casos','Sempre (Human-in-the-Loop formal)'], pontos:[1,0,2,3,4] }
+];
+
+// Pontos de uma opção: usa o mapa "pontos" da pergunta, se existir; senão, a posição (0 a 4)
+const pontuar = (q, indice) => q.pontos ? q.pontos[indice] : indice;
+
+// Capacidade máxima de horas por semana: 44 h (jornada legal) por colaborador
+const HORAS_SEMANA_POR_PESSOA = 44;
+
+const CONTROLES = [
+  { id:'c1', texto:'MFA (verificação em 2 etapas) nas contas', curto:'MFA nas contas' },
+  { id:'c2', texto:'Senhas individuais, sem senha compartilhada', curto:'Senhas individuais' },
+  { id:'c3', texto:'Cada pessoa acessa só o necessário (menor privilégio)', curto:'Menor privilégio' },
+  { id:'c4', texto:'Política escrita de uso ético de IA', curto:'Política de uso de IA' },
+  { id:'c5', texto:'Proibido colar dados de clientes em IAs públicas', curto:'Dados fora de IAs públicas' },
+  { id:'c6', texto:'Dados pessoais mapeados e encarregado LGPD (DPO)', curto:'Mapeamento LGPD + DPO' },
+  { id:'c7', texto:'Equipe treinada em golpes, phishing e privacidade', curto:'Treinamento da equipe' },
+  { id:'c8', texto:'Dados anonimizados antes de usar em IA ou relatórios', curto:'Anonimização de dados' }
+];
+
+const $ = id => document.getElementById(id);
+const brl = v => v.toLocaleString('pt-BR', { style:'currency', currency:'BRL', maximumFractionDigits:0 });
+const num = v => Math.round(v).toLocaleString('pt-BR');
+
+// ================================================================
+// 2) MONTA O FORMULÁRIO
+// ================================================================
+function montarFormulario(){
+  $('listaTarefas').innerHTML = TAREFAS.map(t => `
+    <div class="rounded-lg border p-3" style="border-color:var(--line)">
+      <label class="flex items-start gap-2.5 cursor-pointer text-sm font-medium">
+        <input type="checkbox" id="${t.id}_on" class="w-[18px] h-[18px] mt-px shrink-0" style="accent-color:var(--navy)">
+        ${t.nome}
+      </label>
+      <div class="flex items-center gap-3 mt-2.5">
+        <input type="range" id="${t.id}_h" min="0" max="80" step="1" value="0" aria-label="Horas por semana: ${t.nome}">
+        <span class="text-sm w-[72px] text-right shrink-0"><b id="${t.id}_lbl">0</b> h/sem</span>
+      </div>
+    </div>`).join('');
+
+  $('listaPerguntas').innerHTML = PILARES.filter(p => p.id !== 'seguranca').map(p => `
+    <fieldset class="m-0 p-0 border-0">
+      <legend class="text-sm font-semibold mb-3">${p.nome}</legend>
+      ${PERGUNTAS.filter(q => q.pilar === p.id).map(q => `
+        <div class="mb-4">
+          <div class="text-sm mb-2" id="${q.id}_txt">${q.texto}</div>
+          <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-5 gap-2" role="radiogroup" aria-labelledby="${q.id}_txt">
+            ${q.opcoes.map((o, v) => `<label class="opt relative"><input type="radio" name="${q.id}" value="${v}"><span>${o}</span></label>`).join('')}
+          </div>
+        </div>`).join('')}
+    </fieldset>`).join('');
+
+  $('listaControles').innerHTML = CONTROLES.map(c => `
+    <label class="chk"><input type="checkbox" id="${c.id}"> ${c.texto}</label>`).join('');
+
+  TAREFAS.forEach(t => {
+    $(t.id + '_h').addEventListener('input', e => {
+      $(t.id + '_lbl').textContent = e.target.value;
+      $(t.id + '_on').checked = Number(e.target.value) > 0;
+      aoMudar();
+    });
+    $(t.id + '_on').addEventListener('change', e => {
+      if (!e.target.checked){ $(t.id + '_h').value = 0; $(t.id + '_lbl').textContent = 0; }
+      aoMudar();
+    });
+  });
+  document.querySelectorAll('#empresa input, #empresa select, #diagnostico input, #custoHora').forEach(el => {
+    el.addEventListener('input', aoMudar);
+    el.addEventListener('change', aoMudar);
+  });
+}
+
+// Qualquer mudança: atualiza as etapas e, se o laudo já foi gerado uma vez,
+// recalcula o laudo e os gráficos ao vivo (sem rolar a página).
+let timerRecalculo;
+function aoMudar(){
+  atualizarEtapas();
+  if (!laudoGerado) return;
+  clearTimeout(timerRecalculo);
+  timerRecalculo = setTimeout(() => gerarLaudo({ rolar:false }), 120);
+}
+
+// Total de horas/semana informado nas tarefas
+const totalHorasSemana = () => TAREFAS.reduce((s, t) => s + ($(t.id + '_on').checked ? Number($(t.id + '_h').value) : 0), 0);
+
+// Retorna a mensagem de erro se as horas passarem da capacidade da equipe (colaboradores × 44 h)
+function erroHoras(){
+  const colab = Number($('colaboradores').value);
+  if (!(colab > 0)) return '';
+  const total = totalHorasSemana(), limite = colab * HORAS_SEMANA_POR_PESSOA;
+  return total > limite
+    ? `O total de ${total} h/semana passa da capacidade da equipe (${colab} ${colab === 1 ? 'colaborador' : 'colaboradores'} × ${HORAS_SEMANA_POR_PESSOA} h = ${limite} h/semana). Revise as horas das tarefas.`
+    : '';
+}
+
+function porte(n){
+  if (!n) return '';
+  if (n < 10) return 'Microempresa';
+  if (n < 50) return 'Pequena empresa';
+  if (n < 250) return 'Média empresa';
+  return 'Grande empresa';
+}
+
+// Indicador das etapas na barra lateral
+let laudoGerado = false;
+function atualizarEtapas(){
+  const ok1 = $('empresaNome').value.trim() && $('setor').value && Number($('colaboradores').value) > 0;
+  const ok2 = TAREFAS.some(t => $(t.id + '_on').checked && Number($(t.id + '_h').value) > 0);
+  const ok3 = PERGUNTAS.every(q => document.querySelector(`input[name="${q.id}"]:checked`));
+  const marca = (id, ok) => { $(id).textContent = ok ? 'Concluído' : 'Pendente'; $(id).classList.toggle('ok', !!ok); };
+  marca('st1', ok1); marca('st2', ok2); marca('st3', ok3); marca('st4', laudoGerado);
+  $('totalHorasSem').textContent = totalHorasSemana();
+  const avisoH = erroHoras();
+  $('avisoHoras').textContent = avisoH;
+  $('avisoHoras').classList.toggle('hidden', !avisoH);
+  $('qtdControles').textContent = CONTROLES.filter(c => $(c.id).checked).length;
+  const n = Number($('colaboradores').value);
+  $('porteTxt').textContent = n > 0 ? 'Porte: ' + porte(n) : '';
+  $('breadcrumb').textContent = $('empresaNome').value.trim() || 'Nova auditoria';
+}
+
+// ================================================================
+// 3) MOTOR DE CÁLCULO (RF03)
+// ================================================================
+function calcular(){
+  const faltando = [];
+  if (!$('empresaNome').value.trim()) faltando.push('nome da empresa');
+  if (!$('setor').value) faltando.push('setor');
+  if (!(Number($('colaboradores').value) > 0)) faltando.push('nº de colaboradores');
+  const resp = {};
+  PERGUNTAS.forEach(q => {
+    const m = document.querySelector(`input[name="${q.id}"]:checked`);
+    if (!m) faltando.push('pergunta "' + q.texto + '"'); else resp[q.id] = pontuar(q, Number(m.value));
+  });
+  if (faltando.length){
+    $('msgErro').textContent = 'Falta preencher: ' + faltando.slice(0, 2).join(', ') + (faltando.length > 2 ? ` e mais ${faltando.length - 2}` : '') + '.';
+    return null;
+  }
+  const eh = erroHoras();
+  if (eh){ $('msgErro').textContent = eh; return null; }
+  $('msgErro').textContent = '';
+
+  const check = {}; CONTROLES.forEach(c => check[c.id] = $(c.id).checked);
+  const colab = Number($('colaboradores').value);
+  const custoHora = Math.max(0, Number($('custoHora').value) || 0);
+
+  // Economia por tarefa
+  const tarefas = TAREFAS.map(t => {
+    const on = $(t.id + '_on').checked, hSem = on ? Number($(t.id + '_h').value) : 0;
+    const hojeMes = hSem * SEMANAS_MES, liberadasMes = hojeMes * t.potencial;
+    return { ...t, ativa: hSem > 0, hojeMes, liberadasMes, reaisMes: liberadasMes * custoHora };
+  });
+  const ativas = tarefas.filter(t => t.ativa).sort((a, b) => b.liberadasMes - a.liberadasMes);
+  const horasHojeMes = ativas.reduce((s, t) => s + t.hojeMes, 0);
+  const horasLiberadas = ativas.reduce((s, t) => s + t.liberadasMes, 0);
+  const economiaAno = ativas.reduce((s, t) => s + t.reaisMes, 0) * 12;
+  const custoAno = ativas.length * CUSTO_FERRAMENTA_MES * 12;
+  const liquido = economiaAno - custoAno;
+
+  // Notas por pilar (0–100)
+  const media = ids => ids.reduce((s, id) => s + resp[id], 0) / (ids.length * 4) * 100;
+  const notas = {
+    nuvem: Math.round(media(['q1','q2'])),
+    sistemas: Math.round(media(['q3','q4'])),
+    seguranca: Math.round(Object.values(check).filter(Boolean).length / CONTROLES.length * 100)
+  };
+  // Pilar IA: 60% uso/revisão da IA (q5, q6) + 40% oportunidade já aproveitada
+  // (mais horas manuais por pessoa = menos automação hoje; 40 h/mês por pessoa = 0).
+  // Sem nenhuma tarefa informada não dá para medir o aproveitamento, então ele não
+  // ganha pontos de graça: a nota usa só q5 e q6 (100% do peso).
+  if (horasHojeMes > 0){
+    const aproveitamento = Math.max(0, 100 - (horasHojeMes / colab) * 2.5);
+    notas.ia = Math.round(media(['q5','q6']) * 0.6 + aproveitamento * 0.4);
+  } else {
+    notas.ia = Math.round(media(['q5','q6']));
+  }
+  const geral = Math.round((notas.nuvem + notas.sistemas + notas.ia + notas.seguranca) / 4);
+
+  // Limite de "ganho alto" proporcional ao porte: R$ 1.000 por colaborador por ano,
+  // com mínimo de R$ 5.000. Ex.: 22 colaboradores → R$ 22.000; 3 colaboradores → R$ 5.000.
+  const limiteGanho = Math.max(5000, colab * 1000);
+
+  return { resp, check, colab, custoHora, tarefas, ativas, horasHojeMes, horasLiberadas, economiaAno, custoAno, liquido, notas, geral, limiteGanho };
+}
+
+function classe(n){
+  if (n < 40) return { geral:'Risco alto', pilar:'Crítico', pill:'p-red', cor:'#DC2626', prio:'Prioridade alta' };
+  if (n < 60) return { geral:'Em transição', pilar:'Em transição', pill:'p-amber', cor:'#D97706', prio:'Prioridade média' };
+  if (n < 80) return { geral:'Estruturada', pilar:'Estruturado', pill:'p-blue', cor:'#2563EB', prio:'Prioridade média' };
+  return { geral:'Líder digital', pilar:'Líder digital', pill:'p-green', cor:'#16A34A', prio:'Manter' };
+}
+
+// Ícones do veredito (um para cada tipo)
+const ICONES = {
+  risco: c => `<svg class="shrink-0 mt-0.5" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="${c}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3 2 20h20z"/><path d="M12 10v4M12 17h.01"/></svg>`,
+  verde: c => `<svg class="shrink-0 mt-0.5" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="${c}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="m8 12 3 3 5-6"/></svg>`,
+  info: c => `<svg class="shrink-0 mt-0.5" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="${c}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 8h.01"/></svg>`,
+  neutro: c => `<svg class="shrink-0 mt-0.5" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="${c}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M8 12h8"/></svg>`
+};
+
+// Cruza o ganho com a governança.
+// 1º) Governança abaixo de 50%: o alerta de segurança aparece SEMPRE, com texto conforme o ganho.
+// 2º) Sem alerta de segurança: verde (ganho acima do limite do porte), azul (ganho moderado) ou cinza.
+function veredito(r){
+  const seg = r.notas.seguranca, ativos = Object.values(r.check).filter(Boolean).length;
+  const riscoBase = `Só ${ativos} de 8 controles de segurança estão ativos (governança em ${seg}%). Automatizar com IA sem MFA, sem política de IA e sem cuidado com dados pessoais pode gerar vazamento e sanções da LGPD.`;
+  const risco = { tipo:'risco', estilo:'background:#FFF6ED;border-color:#F9DBAF;color:#7A2E0E', cor:'#B54708' };
+
+  if (seg < 50){
+    if (r.liquido > r.limiteGanho) return { ...risco,
+      titulo:'Grande ganho, mas corrija a governança antes de automatizar.',
+      texto:`A automação pode liberar ${brl(r.liquido)} por ano. ${riscoBase} Corrija os controles pendentes em até 30 dias e só então comece as automações.` };
+    if (r.liquido > 0) return { ...risco,
+      titulo:'Ganho moderado, e a governança precisa vir primeiro.',
+      texto:`O ganho líquido estimado é de ${brl(r.liquido)} por ano. ${riscoBase} Corrija os controles pendentes antes de começar as primeiras automações, uma de cada vez.` };
+    return { ...risco,
+      titulo:'Pouco ganho com automação, e a segurança está frágil.',
+      texto:`${riscoBase} Neste momento, a prioridade é organizar a segurança e os sistemas, não automatizar.` };
+  }
+  if (r.liquido > r.limiteGanho) return { tipo:'verde', estilo:'background:#ECFDF3;border-color:#ABEFC6;color:#054F31', cor:'#067647',
+    titulo:'Sinal verde: alto ganho com governança adequada.',
+    texto:`A empresa pode economizar ${brl(r.liquido)} líquidos por ano com segurança. Comece pela primeira tarefa da tabela de oportunidades e faça um piloto de 30 dias.` };
+  if (r.liquido > 0) return { tipo:'info', estilo:'background:#EFF8FF;border-color:#B2DDFF;color:#194185', cor:'#175CD3',
+    titulo:'Ganho moderado: automatize aos poucos.',
+    texto:`O ganho líquido estimado é de ${brl(r.liquido)} por ano. Comece com 1 ou 2 automações simples e meça o resultado antes de expandir.` };
+  return { tipo:'neutro', estilo:'background:#F9FAFB;border-color:#E4E7EC;color:#344054', cor:'#5B6577',
+    titulo:'Pouco trabalho manual informado.',
+    texto:'Com as tarefas informadas, o custo das ferramentas ainda supera a economia. Revise as horas por semana ou foque primeiro em organizar sistemas e governança.' };
+}
+
+// ================================================================
+// 4) RECOMENDAÇÕES (RF05)
+// ================================================================
+function recomendacoes(pilar, n, r){
+  const q = r.resp, c = r.check, rec = [];
+  if (pilar === 'nuvem'){
+    if (q.q1 <= 1) rec.push('Tirar os arquivos e o e-mail do computador usado como "servidor" e migrar para <b>SaaS</b> (Google Workspace ou Microsoft 365).');
+    if (q.q1 <= 3) rec.push('Para gestão do dia a dia, preferir <b>SaaS</b> (ERP em nuvem). Usar <b>IaaS/PaaS</b> (AWS, Azure, GCP) só para sistemas próprios ou legados que precisam de servidor.');
+    if (q.q2 <= 2) rec.push('Implantar a <b>Regra de Backup 3-2-1</b>: 3 cópias, em 2 mídias diferentes, 1 fora da empresa (nuvem), tudo automático.');
+    if (q.q2 === 3) rec.push('Fazer um <b>teste de restauração</b> do backup a cada 3 meses.');
+    rec.push('Automação depende de internet: ter <b>link redundante</b> (2ª operadora ou 4G/5G de contingência).');
+    if (n >= 60) rec.push('Aplicar <b>FinOps</b>: revisar a fatura da nuvem todo mês e desligar o que não é usado.');
+  }
+  if (pilar === 'sistemas'){
+    if (q.q3 <= 1) rec.push('Trocar planilhas soltas por <b>ERP</b> (financeiro/estoque) e <b>CRM</b> (clientes/vendas). Sem isso, a automação só repete a bagunça mais rápido.');
+    if (q.q3 === 2 || q.q3 === 3) rec.push('Integrar ERP e CRM para que uma venda vire lançamento financeiro e baixa de estoque sozinha.');
+    if (q.q4 <= 2) rec.push('Na próxima troca de sistema, exigir <b>API aberta</b>: é ela que permite automatizar com No-Code.');
+    if (q.q4 === 3) rec.push('A empresa já tem API e não usa: é a automação mais barata disponível. Conectar via Make ou n8n.');
+    rec.push('Definir a <b>Fonte Única da Verdade</b>: cada dado (cliente, produto, preço) tem um único sistema "dono".');
+    if (n < 80) rec.push('Criar um <b>dashboard gerencial</b> com 5 indicadores: faturamento, margem, ticket médio, inadimplência e horas economizadas.');
+  }
+  if (pilar === 'ia'){
+    const top = r.ativas[0];
+    if (top) rec.push(`Começar por <b>${top.nome.toLowerCase()}</b>: é onde está o maior ganho (${num(top.liberadasMes)} h/mês).`);
+    if (q.q5 <= 2) rec.push('Padronizar o uso de IA: definir <b>quais ferramentas são permitidas</b> e criar <b>modelos de prompt</b> para as tarefas comuns.');
+    if (q.q6 <= 2) rec.push('Implantar <b>Human-in-the-Loop</b>: nada gerado por IA vai para cliente ou para o financeiro sem revisão humana (evita alucinações).');
+    rec.push('Fazer um <b>piloto de 30 dias</b> com uma única tarefa antes de automatizar tudo.');
+    rec.push('Medir o resultado: registrar <b>horas economizadas por mês</b> e comparar com o custo das ferramentas (ROI).');
+  }
+  if (pilar === 'seguranca'){
+    if (!c.c1) rec.push('<b>Primeiro passo:</b> ativar <b>MFA</b> em e-mail, banco, ERP, CRM e redes sociais da empresa.');
+    if (!c.c2) rec.push('Acabar com senhas compartilhadas: usar um <b>gerenciador de senhas</b> corporativo (ex: Bitwarden).');
+    if (!c.c3) rec.push('Aplicar o <b>menor privilégio</b>: cada pessoa acessa só o necessário; remover acessos no dia do desligamento.');
+    if (!c.c4) rec.push('Escrever uma <b>Política de Uso Ético de IA</b> (1 página já resolve): ferramentas permitidas, o que é proibido e quem revisa.');
+    if (!c.c5) rec.push('Proibir colar <b>dados de clientes, contratos ou dados sensíveis</b> em IAs públicas gratuitas.');
+    if (!c.c6) rec.push('Iniciar a adequação à <b>LGPD</b>: mapear quais dados pessoais são coletados, para quê, onde ficam e quem acessa; nomear um encarregado (DPO).');
+    if (!c.c7) rec.push('<b>Treinamento semestral</b> da equipe sobre golpes, phishing, senhas e privacidade.');
+    if (!c.c8) rec.push('<b>Anonimizar</b> dados (trocar nome e CPF por códigos) antes de usar em IA ou relatórios.');
+    if (!rec.length) rec.push('Governança completa. Revisar a política de IA uma vez por ano e auditar os acessos a cada 6 meses.');
+  }
+  return rec;
+}
+
+// ================================================================
+// 5) MOSTRA O LAUDO
+// ================================================================
+let grafRadar, grafBarras, listaBarras = [];
+// opcoes.rolar = true só quando o usuário clica (Gerar / Demo); no recálculo ao vivo a página não rola.
+// Se faltar algum campo, calcular() mostra o erro e o último laudo continua na tela.
+function gerarLaudo(opcoes = {}){
+  const r = calcular();
+  if (!r) return;
+  const c = classe(r.geral);
+  const setor = $('setor').value;
+
+  $('lEmpresa').textContent = $('empresaNome').value.trim();
+  $('lMeta').textContent = `${setor} · ${r.colab} colaboradores (${porte(r.colab).toLowerCase()}) · Custo/hora ${brl(r.custoHora)} · Emitido em ${new Date().toLocaleDateString('pt-BR')}`;
+
+  // Score em anel
+  const circ = 2 * Math.PI * 44;
+  $('anelArco').setAttribute('stroke-dasharray', `${circ * r.geral / 100} ${circ}`);
+  $('anelArco').setAttribute('stroke', c.cor);
+  $('anelTxt').textContent = r.geral + '%';
+  $('anelScore').setAttribute('aria-label', `Score geral ${r.geral}%`);
+  $('lScoreTxt').textContent = `Score geral: ${r.geral} / 100%`;
+  $('lClasse').textContent = c.geral;
+
+  // KPIs
+  $('kHoras').textContent = num(r.horasLiberadas) + ' h';
+  $('kHorasSub').textContent = r.horasHojeMes ? `de ${num(r.horasHojeMes)} h manuais hoje (${Math.round(r.horasLiberadas / r.horasHojeMes * 100)}%)` : 'nenhuma tarefa informada';
+  $('kBruta').textContent = brl(r.economiaAno);
+  $('kBrutaSub').textContent = `− ${brl(r.custoAno)} em ferramentas`;
+  $('kLiquido').textContent = brl(r.liquido);
+  $('kLiquido').style.color = r.liquido >= 0 ? 'var(--lime)' : '#FCA5A5';
+  $('kLiquidoSub').textContent = r.custoAno ? `Retorno de ${(r.economiaAno / r.custoAno).toLocaleString('pt-BR', { maximumFractionDigits:1 })}× o custo` : 'sem custo de ferramentas';
+
+  // Veredito
+  const v = veredito(r);
+  $('veredito').setAttribute('style', v.estilo);
+  $('veredito').innerHTML = `${ICONES[v.tipo](v.cor)}
+    <div class="text-sm leading-relaxed"><b>${v.titulo}</b> ${v.texto}</div>`;
+
+  // Cards com a nota de cada pilar
+  $('lCardsPilares').innerHTML = PILARES.map(p => {
+    const n = r.notas[p.id], k = classe(n);
+    return `<div class="card p-4 flex flex-col gap-2">
+      <div class="text-[13px] leading-snug" style="color:var(--muted)">${p.nome}</div>
+      <div class="flex items-end justify-between gap-2">
+        <div class="text-2xl font-bold">${n}%</div>
+        <span class="pill ${k.pill} print-color">${k.pilar}</span>
+      </div>
+      <div class="bar print-color"><div style="width:${n}%; background:${k.cor}"></div></div>
+    </div>`;
+  }).join('');
+
+  // Pilares
+  $('lPilares').innerHTML = PILARES.map(p => {
+    const n = r.notas[p.id], k = classe(n);
+    return `<div class="flex flex-col gap-1.5">
+      <div class="flex justify-between items-center text-sm gap-2"><span>${p.nome}</span><span class="font-semibold">${n}% <span class="pill ${k.pill} ml-1.5 print-color">${k.pilar}</span></span></div>
+      <div class="bar print-color"><div style="width:${n}%; background:${k.cor}"></div></div>
+    </div>`;
+  }).join('');
+
+  // Controles
+  const ativos = CONTROLES.filter(x => r.check[x.id]).length;
+  $('lQtdControles').textContent = `${ativos} de 8`;
+  $('lBarControles').style.width = (ativos / 8 * 100) + '%';
+  $('lControles').innerHTML = CONTROLES.map(x => `
+    <div class="flex justify-between items-center gap-2 py-2.5 border-b" style="border-color:#F0F2F5">
+      <span>${x.curto}</span><span class="pill ${r.check[x.id] ? 'p-green' : 'p-red'} print-color">${r.check[x.id] ? 'Ativo' : 'Pendente'}</span>
+    </div>`).join('');
+
+  // Gráfico radar (se já existe, só atualiza os dados: sem piscar e sem mexer no layout)
+  const dadosRadar = PILARES.map(p => r.notas[p.id]);
+  if (grafRadar){
+    grafRadar.data.datasets[0].label = $('empresaNome').value.trim();
+    grafRadar.data.datasets[0].data = dadosRadar;
+    grafRadar.update('none');
+  } else grafRadar = new Chart($('graficoRadar'), {
+    type:'radar',
+    data:{ labels:['Nuvem','ERP/CRM','IA & Automação','Governança'], datasets:[
+      { label:$('empresaNome').value.trim(), data:dadosRadar, backgroundColor:'rgba(37,99,235,0.15)', borderColor:'#2563EB', pointBackgroundColor:'#2563EB', borderWidth:2 },
+      { label:'Meta Líder Digital', data:[80,80,80,80], backgroundColor:'transparent', borderColor:'#0B1220', borderDash:[5,5], pointRadius:0, borderWidth:1.5 }
+    ]},
+    options:{ maintainAspectRatio:false, layout:{ padding:8 },
+      scales:{ r:{ min:0, max:100, ticks:{ stepSize:20, backdropColor:'transparent', color:'#98A2B3', font:{ size:10 } }, grid:{ color:'#EEF0F3' }, angleLines:{ color:'#EEF0F3' }, pointLabels:{ color:'#344054', font:{ family:'Inter', size:12, weight:'500' } } } },
+      plugins:{ legend:{ position:'bottom', labels:{ font:{ family:'Inter', size:12 }, boxWidth:12 } } } }
+  });
+
+  // Gráfico de barras (empilhado)
+  const lista = r.ativas.length ? r.ativas : [{ curto:'Nenhuma', nome:'Nenhuma tarefa informada', hojeMes:0, liberadasMes:0 }];
+  listaBarras = lista; // usada no tooltip
+  if (grafBarras){
+    grafBarras.data.labels = lista.map(t => t.curto);
+    grafBarras.data.datasets[0].data = lista.map(t => Math.round(t.liberadasMes));
+    grafBarras.data.datasets[1].data = lista.map(t => Math.round(t.hojeMes - t.liberadasMes));
+    grafBarras.update('none');
+  } else grafBarras = new Chart($('graficoBarras'), {
+    type:'bar',
+    data:{ labels:lista.map(t => t.curto), datasets:[
+      { label:'Liberado pela automação', data:lista.map(t => Math.round(t.liberadasMes)), backgroundColor:'#2563EB', borderRadius:4 },
+      { label:'Continua manual', data:lista.map(t => Math.round(t.hojeMes - t.liberadasMes)), backgroundColor:'#CBD5E1', borderRadius:4 }
+    ]},
+    options:{ indexAxis:'y', maintainAspectRatio:false,
+      scales:{ x:{ stacked:true, beginAtZero:true, grid:{ color:'#F0F2F5' }, title:{ display:true, text:'horas por mês', color:'#5B6577' } }, y:{ stacked:true, grid:{ display:false } } },
+      plugins:{ legend:{ position:'bottom', labels:{ font:{ family:'Inter', size:12 }, boxWidth:12 } }, tooltip:{ callbacks:{ title:i => listaBarras[i[0].dataIndex].nome } } } }
+  });
+
+  // Tabela de oportunidades
+  const maxH = Math.max(1, ...r.ativas.map(t => t.hojeMes));
+  $('lTabela').innerHTML = r.ativas.length ? r.ativas.map((t, i) => `
+    <div class="tabela-row">
+      <span style="color:var(--muted)">${i + 1}</span>
+      <span class="font-medium">${t.nome}</span>
+      <span class="hide-sm" style="color:var(--muted)">${t.como}</span>
+      <span class="hide-sm pr-3"><span class="flex h-2 rounded-full overflow-hidden print-color" style="width:${Math.max(8, t.hojeMes / maxH * 100)}%; background:#CBD5E1"><span style="width:${t.potencial * 100}%; background:#2563EB"></span></span></span>
+      <span class="hide-sm text-right">${num(t.liberadasMes)} h</span>
+      <span class="text-right font-semibold" style="color:#067647">${brl(t.reaisMes)}</span>
+    </div>`).join('')
+    : '<div class="px-5 py-4 text-sm" style="color:var(--muted)">Nenhuma tarefa manual marcada na etapa 2.</div>';
+
+  // Guia de boas práticas (pilar mais fraco primeiro)
+  const ordem = [...PILARES].sort((a, b) => r.notas[a.id] - r.notas[b.id]);
+  $('lGuia').innerHTML = ordem.map(p => {
+    const n = r.notas[p.id], k = classe(n);
+    return `<div class="rounded-lg border p-4 print-keep" style="border-color:var(--line); background:#FCFCFD">
+      <div class="flex justify-between items-start gap-2 mb-2">
+        <div class="font-semibold text-[15px]">${p.nome} <span class="font-normal" style="color:var(--muted)">· ${n}%</span></div>
+        <span class="pill ${k.pill} print-color">${k.prio}</span>
+      </div>
+      <ul class="m-0 pl-5 list-disc text-sm leading-relaxed flex flex-col gap-1" style="color:#344054">${recomendacoes(p.id, n, r).map(x => `<li>${x}</li>`).join('')}</ul>
+    </div>`;
+  }).join('');
+
+  $('laudo').classList.remove('hidden');
+  $('laudo').classList.add('flex');
+  laudoGerado = true;
+  atualizarEtapas();
+  if (opcoes.rolar) $('laudo-ancora').scrollIntoView({ behavior:'smooth' });
+}
+
+// ================================================================
+// 6) CASO EXEMPLO (RF06)
+// ================================================================
+function carregarDemo(){
+  $('empresaNome').value = 'Clínica Vida & Saúde Ltda.';
+  $('setor').value = 'Saúde';
+  $('colaboradores').value = 22;
+  $('custoHora').value = 38;
+  const horas = { t1:20, t2:25, t3:8, t4:6, t5:5, t6:15 };
+  TAREFAS.forEach(t => { $(t.id + '_on').checked = true; $(t.id + '_h').value = horas[t.id]; $(t.id + '_lbl').textContent = horas[t.id]; });
+  const resp = { q1:1, q2:1, q3:2, q4:3, q5:1, q6:1 };
+  Object.entries(resp).forEach(([q, v]) => document.querySelector(`input[name="${q}"][value="${v}"]`).checked = true);
+  CONTROLES.forEach(c => $(c.id).checked = ['c2','c3'].includes(c.id));
+  gerarLaudo({ rolar:true });
+}
+
+// ================================================================
+// 7) INICIALIZAÇÃO
+// ================================================================
+// Sem animação: os gráficos aparecem na hora e saem completos no PDF
+Chart.defaults.animation = false;
+Chart.defaults.font.family = 'Inter';
+
+montarFormulario();
+atualizarEtapas();
+$('btnGerar').addEventListener('click', () => gerarLaudo({ rolar:true }));
+$('btnDemo').addEventListener('click', carregarDemo);
+$('btnPrint').addEventListener('click', () => {
+  if (!laudoGerado){ $('msgErro').textContent = 'Gere a auditoria antes de imprimir o laudo.'; $('diagnostico').scrollIntoView({ behavior:'smooth' }); return; }
+  window.print();
+});
+// Gráficos redimensionam corretamente na impressão
+window.addEventListener('beforeprint', () => { grafRadar && grafRadar.resize(); grafBarras && grafBarras.resize(); });
+
+// Destaca a etapa visível na barra lateral
+const obs = new IntersectionObserver(es => es.forEach(e => {
+  if (!e.isIntersecting) return;
+  const idx = { empresa:1, tarefas:2, diagnostico:3, laudo:4 }[e.target.id];
+  document.querySelectorAll('.step').forEach(s => s.classList.toggle('ativo', Number(s.dataset.step) === idx));
+}), { rootMargin:'-40% 0px -55% 0px' });
+['empresa','tarefas','diagnostico','laudo'].forEach(id => obs.observe($(id)));
+</script>
+</body>
+</html>
