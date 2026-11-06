@@ -15,7 +15,7 @@ Muitas pequenas e médias empresas perdem horas toda semana com tarefas manuais 
 - **☁ Infraestrutura e Migração para a Nuvem:** avalia onde ficam os sistemas e como é feito o backup. Recomenda SaaS (Google Workspace, Microsoft 365, ERP em nuvem) para a gestão do dia a dia e IaaS/PaaS (AWS, Azure, GCP) só para sistemas próprios ou legados, além da Regra de Backup 3-2-1, link de internet redundante e FinOps.
 - **🔄 Sistemas Empresariais (ERP/CRM) e Fluxo de Dados:** verifica se a empresa ainda usa planilhas soltas e se os sistemas têm API. Recomenda integrar ERP e CRM, definir a Fonte Única da Verdade, exigir API aberta e criar um dashboard gerencial.
 - **🤖 IA Generativa e Automação No-Code:** a calculadora estima as horas/mês e os R$/ano economizados por tarefa, desconta o custo das ferramentas (ROI) e monta um ranking de oportunidades, do maior ganho para o menor. Recomenda ferramentas No-Code (Make, Zapier, n8n), um piloto de 30 dias e revisão humana (Human-in-the-Loop).
-- **🛡 Governança, Ética e Segurança Digital (LGPD):** um checklist de 8 controles (MFA, senhas individuais, menor privilégio, política de uso ético de IA, dados fora de IAs públicas, mapeamento LGPD + DPO, treinamento e anonimização), cada um com status Ativo/Pendente. Se o ganho for alto e a governança baixa, o app alerta para **corrigir a segurança antes de automatizar**.
+- **🛡 Governança, Ética e Segurança Digital (LGPD):** um checklist de 8 controles (MFA, senhas individuais, menor privilégio, política de uso ético de IA, dados fora de IAs públicas, mapeamento LGPD + DPO, treinamento e anonimização), cada um com status Ativo/Pendente. Se a governança estiver abaixo de 50%, o app alerta para **corrigir a segurança antes de automatizar**, em qualquer nível de ganho.
 
 ## 🛠 3. IAs Generativas e Ferramentas Utilizadas
 | Ferramenta / IA | Como foi utilizada no projeto |
@@ -61,7 +61,7 @@ REQUISITOS OBRIGATÓRIOS:
 5. Motor de cálculo em JavaScript, sem recarregar a página: horas economizadas/mês,
    economia/ano, custo das ferramentas, ganho líquido (ROI), nota 0–100 por pilar e
    Score Geral com selo (Risco Alto, Em Transição, Estruturada, Líder Digital).
-6. Veredito que cruza ganho x risco: se o ganho for alto e a governança baixa, alertar
+6. Veredito que cruza ganho x risco: se a governança estiver abaixo de 50%, alertar sempre, em qualquer nível de ganho
    para corrigir a segurança ANTES de automatizar.
 7. Dashboard com Chart.js: Radar dos 4 pilares e Barras de horas/mês por tarefa.
 8. Ranking de oportunidades de automação e Guia de Boas Práticas personalizado por pilar.
