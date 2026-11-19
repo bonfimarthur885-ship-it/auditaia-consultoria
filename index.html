@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>AuditaIA — Auditor de Automação com IA, Produtividade & Governança LGPD</title>
-  <meta name="description" content="Calcule quanto sua empresa economiza automatizando processos com IA e No-Code e verifique a governança de segurança e LGPD." />
+  <title>AuditaIA — Auditor de Automação com IA, Cibersegurança & LGPD</title>
+  <meta name="description" content="Calcule quanto sua empresa economiza automatizando processos com IA e No-Code e verifique a cibersegurança e a proteção de dados (LGPD)." />
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 48 48'%3E%3Crect x='1' y='1' width='46' height='46' rx='11' fill='%23C6F432'/%3E%3Ccircle cx='21' cy='21' r='11' fill='none' stroke='%230B1220' stroke-width='4'/%3E%3Cpath d='m29.5 29.5 8 8' stroke='%230B1220' stroke-width='4.5' stroke-linecap='round'/%3E%3C/svg%3E" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
@@ -115,7 +115,7 @@
 
     <!-- ===================== INTRO ===================== -->
     <div class="no-print">
-      <h1 class="text-2xl font-bold tracking-tight m-0">Auditor de Automação com IA &amp; Governança LGPD</h1>
+      <h1 class="text-2xl font-bold tracking-tight m-0">Auditor de Automação com IA, Cibersegurança &amp; LGPD</h1>
       <p class="text-sm mt-1 mb-0" style="color:var(--muted)">Descubra quantas horas e quanto dinheiro sua empresa pode economizar automatizando tarefas com IA e No-Code, e se ela está pronta para fazer isso com segurança.</p>
     </div>
 
@@ -159,13 +159,13 @@
 
     <!-- ===================== 3. DIAGNÓSTICO (RF02) ===================== -->
     <section id="diagnostico" class="no-print card p-5 scroll-mt-20">
-      <div class="h2">3. Diagnóstico de prontidão e governança</div>
-      <p class="label mt-1 mb-0">Responda às perguntas dos pilares e marque os controles de segurança que a empresa já tem.</p>
+      <div class="h2">3. Diagnóstico de prontidão e cibersegurança</div>
+      <p class="label mt-1 mb-0">Responda às perguntas dos pilares e marque os controles de cibersegurança e proteção de dados que a empresa já tem.</p>
       <div id="listaPerguntas" class="flex flex-col gap-5 mt-5"></div>
       <div class="mt-6">
         <div class="flex items-center justify-between">
-          <div class="text-sm font-semibold">Governança, Ética &amp; LGPD — controles ativos</div>
-          <div class="text-sm" style="color:var(--muted)"><b id="qtdControles" style="color:var(--ink)">0</b> de <span id="totalControles">9</span></div>
+          <div class="text-sm font-semibold">Cibersegurança &amp; Proteção de Dados — controles ativos</div>
+          <div class="text-sm" style="color:var(--muted)"><b id="qtdControles" style="color:var(--ink)">0</b> de <span id="totalControles">15</span></div>
         </div>
         <div id="listaControles" class="grid grid-cols-1 md:grid-cols-2 gap-2 mt-3"></div>
       </div>
@@ -253,7 +253,7 @@
         </div>
         <div class="card p-5 flex flex-col gap-3">
           <div class="flex justify-between items-center">
-            <div class="h2">Controles de segurança &amp; LGPD</div>
+            <div class="h2">Controles de cibersegurança &amp; LGPD</div>
             <div class="text-sm" style="color:var(--muted)"><b id="lQtdControles" style="color:var(--ink)"></b> ativos</div>
           </div>
           <div class="bar print-color"><div id="lBarControles" style="background:#16A34A; width:0"></div></div>
@@ -288,6 +288,22 @@
           <span>#</span><span>Tarefa</span><span class="hide-sm">Como automatizar</span><span class="hide-sm">Horas/mês</span><span class="hide-sm text-right">Liberadas</span><span class="text-right">R$/mês</span>
         </div>
         <div id="lTabela"></div>
+      </div>
+
+      <!-- Plano no formato A3 (Fase 9 do simulador): problema → requisito → solução -->
+      <div class="card overflow-hidden print-keep">
+        <div class="px-5 py-4 border-b" style="border-color:var(--line)">
+          <div class="h2">Plano no formato A3</div>
+          <div class="label mt-0.5">Cada problema encontrado vira um requisito e uma solução recomendada, como na matriz de rastreabilidade do plano A3.</div>
+        </div>
+        <div class="overflow-x-auto">
+          <table class="w-full text-sm">
+            <thead><tr class="text-left text-[13px]" style="color:var(--muted); background:#FAFBFC">
+              <th class="px-5 py-2.5 font-medium">Problema</th><th class="px-3 py-2.5 font-medium">Requisito</th><th class="px-3 py-2.5 font-medium">Solução recomendada</th><th class="px-5 py-2.5 font-medium">Pilar</th>
+            </tr></thead>
+            <tbody id="lPlanoA3"></tbody>
+          </table>
+        </div>
       </div>
 
       <!-- Linha 5: Guia de boas práticas (RF05) -->
@@ -331,7 +347,7 @@ const PILARES = [
   { id:'nuvem', nome:'Infraestrutura & Nuvem' },
   { id:'sistemas', nome:'Sistemas ERP/CRM & Dados' },
   { id:'ia', nome:'IA & Automação No-Code' },
-  { id:'seguranca', nome:'Governança, Ética & LGPD' }
+  { id:'seguranca', nome:'Cibersegurança & Proteção de Dados (LGPD)' }
 ];
 
 const PERGUNTAS = [
@@ -348,12 +364,21 @@ const PERGUNTAS = [
     'Não sei / não temos sistema','Não permitem','Só exportam planilhas','Têm API, mas não usamos','Integramos via API'] },
   { id:'q8', pilar:'sistemas', texto:'Os sistemas do dia a dia são Mobile-Friendly (funcionam bem no celular, em app ou site responsivo)?', opcoes:[
     'Não sei / não temos sistema','Só funcionam no computador','Abrem no celular, mas são difíceis de usar','Funcionam no celular, com limitações','Mobile-first: fáceis de usar no celular'] },
+  // q9 (Fase 5 do simulador): como a gestão enxerga os números
+  { id:'q9', pilar:'sistemas', texto:'Como os gestores acompanham os indicadores do negócio?', opcoes:[
+    'Não acompanham indicadores','Planilha montada à mão, de vez em quando','Relatório mensal consolidado','Dashboard atualizado no dia seguinte (D-1)','Dashboard em Near Real-Time, focado em OKRs'] },
   { id:'q5', pilar:'ia', texto:'Como a equipe usa IA Generativa hoje?', opcoes:[
     'Não usa','Cada um usa do seu jeito','Em algumas tarefas, sem regras','Em processos definidos, com revisão','Integrada aos processos, com métricas'] },
   // q6 tem um mapa de pontos próprio: "Não, vai direto" (IA sem revisão) é mais arriscado
   // que "Não usamos IA", então vale 0 e "Não usamos IA" vale 1. A ordem visual não muda.
   { id:'q6', pilar:'ia', texto:'Alguém revisa o que a IA ou a automação produz antes de ir para o cliente?', opcoes:[
-    'Não usamos IA','Não, vai direto','Às vezes','Sim, na maioria dos casos','Sempre (Human-in-the-Loop formal)'], pontos:[1,0,2,3,4] }
+    'Não usamos IA','Não, vai direto','Às vezes','Sim, na maioria dos casos','Sempre (Human-in-the-Loop formal)'], pontos:[1,0,2,3,4] },
+  // q10 (Fase 6 do simulador): como as automações disparam
+  { id:'q10', pilar:'ia', texto:'Quando acontece uma venda, como estoque, financeiro e cliente são atualizados?', opcoes:[
+    'Tudo à mão, por alguém da equipe','Planilha exportada e importada depois','Rotina agendada, em lote (de hora em hora ou à noite)','Parte automática, parte manual','Na hora, por evento (webhook), com aviso automático ao cliente'] },
+  // q11 (Fase 7 do simulador): como a empresa implanta mudanças
+  { id:'q11', pilar:'ia', texto:'Como a empresa implanta um sistema ou uma automação nova?', opcoes:[
+    'Tudo de uma vez, em todas as áreas (Big Bang)','Sem plano nem treinamento','Com treinamento, mas sem piloto','Piloto em uma área antes de expandir','Piloto com testes A/B, métricas de adoção e implantação gradual'] }
 ];
 
 // Pontos de uma opção: usa o mapa "pontos" da pergunta, se existir; senão, a posição (0 a 4)
@@ -371,7 +396,21 @@ const CONTROLES = [
   { id:'c6', texto:'Dados pessoais mapeados e encarregado LGPD (DPO)', curto:'Mapeamento LGPD + DPO' },
   { id:'c7', texto:'Equipe treinada em golpes, phishing e privacidade', curto:'Treinamento da equipe' },
   { id:'c8', texto:'Dados anonimizados antes de usar em IA ou relatórios', curto:'Anonimização de dados' },
-  { id:'c9', texto:'Controle de Acessos centralizado (IAM), com registro de quem acessou o quê', curto:'Controle de Acessos (IAM)' }
+  { id:'c9', texto:'Controle de Acessos centralizado (IAM), com registro de quem acessou o quê', curto:'Controle de Acessos (IAM)' },
+  // c10 e c11 (Fase 8 do simulador): criptografia e mascaramento por padrão
+  { id:'c10', texto:'Dados criptografados em repouso e em trânsito (HTTPS, discos e backups)', curto:'Criptografia de dados' },
+  { id:'c11', texto:'Dados pessoais mascarados nas telas por padrão (ex.: CPF parcial)', curto:'Mascaramento de dados' },
+  // c12 a c15: defesas de cibersegurança contra as ameaças mais comuns
+  { id:'c12', texto:'Sistemas e computadores sempre atualizados (patches de segurança)', curto:'Atualizações de segurança' },
+  { id:'c13', texto:'Antivírus/EDR e firewall ativos em todos os equipamentos', curto:'Antivírus e firewall' },
+  { id:'c14', texto:'Backup offline ou imutável, protegido contra ransomware', curto:'Backup contra ransomware' },
+  { id:'c15', texto:'Plano de resposta a incidentes (quem faz o quê em caso de ataque ou vazamento)', curto:'Plano de incidentes' }
+];
+
+// Os controles aparecem em dois grupos no formulário
+const GRUPOS_CONTROLES = [
+  { nome:'Cibersegurança: acessos e defesa contra ataques', ids:['c1','c2','c3','c9','c12','c13','c14','c7','c15'] },
+  { nome:'Proteção de dados e LGPD', ids:['c10','c11','c8','c6','c4','c5'] }
 ];
 
 const $ = id => document.getElementById(id);
@@ -406,8 +445,10 @@ function montarFormulario(){
         </div>`).join('')}
     </fieldset>`).join('');
 
-  $('listaControles').innerHTML = CONTROLES.map(c => `
-    <label class="chk"><input type="checkbox" id="${c.id}"> ${c.texto}</label>`).join('');
+  $('listaControles').innerHTML = GRUPOS_CONTROLES.map(g => `
+    <div class="md:col-span-2 text-[13px] font-semibold mt-2" style="color:var(--muted)">${g.nome}</div>
+    ${g.ids.map(id => CONTROLES.find(c => c.id === id)).map(c => `
+    <label class="chk"><input type="checkbox" id="${c.id}"> ${c.texto}</label>`).join('')}`).join('');
 
   TAREFAS.forEach(t => {
     $(t.id + '_h').addEventListener('input', e => {
@@ -517,18 +558,20 @@ function calcular(){
   const media = ids => ids.reduce((s, id) => s + resp[id], 0) / (ids.length * 4) * 100;
   const notas = {
     nuvem: Math.round(media(['q1','q2'])),
-    sistemas: Math.round(media(['q3','q4','q8'])),
+    sistemas: Math.round(media(['q3','q4','q8','q9'])),
     seguranca: Math.round(Object.values(check).filter(Boolean).length / CONTROLES.length * 100)
   };
-  // Pilar IA: 60% uso/revisão da IA (q5, q6) + 40% oportunidade já aproveitada
+  // Pilar IA: 60% respostas (q5 uso de IA, q6 revisão, q10 automação por eventos,
+  // q11 forma de implantar) + 40% oportunidade já aproveitada
   // (mais horas manuais por pessoa = menos automação hoje; 40 h/mês por pessoa = 0).
   // Sem nenhuma tarefa informada não dá para medir o aproveitamento, então ele não
-  // ganha pontos de graça: a nota usa só q5 e q6 (100% do peso).
+  // ganha pontos de graça: a nota usa só as respostas (100% do peso).
+  const perguntasIA = ['q5','q6','q10','q11'];
   if (horasHojeMes > 0){
     const aproveitamento = Math.max(0, 100 - (horasHojeMes / colab) * 2.5);
-    notas.ia = Math.round(media(['q5','q6']) * 0.6 + aproveitamento * 0.4);
+    notas.ia = Math.round(media(perguntasIA) * 0.6 + aproveitamento * 0.4);
   } else {
-    notas.ia = Math.round(media(['q5','q6']));
+    notas.ia = Math.round(media(perguntasIA));
   }
   const geral = Math.round((notas.nuvem + notas.sistemas + notas.ia + notas.seguranca) / 4);
 
@@ -554,34 +597,34 @@ const ICONES = {
   neutro: c => `<svg class="shrink-0 mt-0.5" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="${c}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M8 12h8"/></svg>`
 };
 
-// Cruza o ganho com a governança.
-// 1º) Governança abaixo de 50%: o alerta de segurança aparece SEMPRE, com texto conforme o ganho.
+// Cruza o ganho com a cibersegurança.
+// 1º) Cibersegurança abaixo de 50%: o alerta de segurança aparece SEMPRE, com texto conforme o ganho.
 // 2º) Sem alerta de segurança: verde (ganho acima do limite do porte), azul (ganho moderado) ou cinza.
 function veredito(r){
   const seg = r.notas.seguranca, ativos = Object.values(r.check).filter(Boolean).length;
-  const riscoBase = `Só ${ativos} de ${CONTROLES.length} controles de segurança estão ativos (governança em ${seg}%). Automatizar com IA sem MFA, sem política de IA e sem cuidado com dados pessoais pode gerar vazamento e sanções da LGPD.`;
+  const riscoBase = `Só ${ativos} de ${CONTROLES.length} controles de cibersegurança estão ativos (nota de ${seg}%). Automatizar com IA sem MFA, sem backup protegido e sem cuidado com dados pessoais abre espaço para ataques, vazamentos e sanções da LGPD.`;
   const risco = { tipo:'risco', estilo:'background:#FFF6ED;border-color:#F9DBAF;color:#7A2E0E', cor:'#B54708' };
 
   if (seg < 50){
     if (r.liquido > r.limiteGanho) return { ...risco,
-      titulo:'Grande ganho, mas corrija a governança antes de automatizar.',
+      titulo:'Grande ganho, mas corrija a cibersegurança antes de automatizar.',
       texto:`A automação pode liberar ${brl(r.liquido)} por ano. ${riscoBase} Corrija os controles pendentes em até 30 dias e só então comece as automações.` };
     if (r.liquido > 0) return { ...risco,
-      titulo:'Ganho moderado, e a governança precisa vir primeiro.',
+      titulo:'Ganho moderado, e a cibersegurança precisa vir primeiro.',
       texto:`O ganho líquido estimado é de ${brl(r.liquido)} por ano. ${riscoBase} Corrija os controles pendentes antes de começar as primeiras automações, uma de cada vez.` };
     return { ...risco,
-      titulo:'Pouco ganho com automação, e a segurança está frágil.',
+      titulo:'Pouco ganho com automação, e a cibersegurança está frágil.',
       texto:`${riscoBase} Neste momento, a prioridade é organizar a segurança e os sistemas, não automatizar.` };
   }
   if (r.liquido > r.limiteGanho) return { tipo:'verde', estilo:'background:#ECFDF3;border-color:#ABEFC6;color:#054F31', cor:'#067647',
-    titulo:'Sinal verde: alto ganho com governança adequada.',
+    titulo:'Sinal verde: alto ganho com cibersegurança adequada.',
     texto:`A empresa pode economizar ${brl(r.liquido)} líquidos por ano com segurança. Comece pela primeira tarefa da tabela de oportunidades e faça um piloto de 30 dias.` };
   if (r.liquido > 0) return { tipo:'info', estilo:'background:#EFF8FF;border-color:#B2DDFF;color:#194185', cor:'#175CD3',
     titulo:'Ganho moderado: automatize aos poucos.',
     texto:`O ganho líquido estimado é de ${brl(r.liquido)} por ano. Comece com 1 ou 2 automações simples e meça o resultado antes de expandir.` };
   return { tipo:'neutro', estilo:'background:#F9FAFB;border-color:#E4E7EC;color:#344054', cor:'#5B6577',
     titulo:'Pouco trabalho manual informado.',
-    texto:'Com as tarefas informadas, o custo das ferramentas ainda supera a economia. Revise as horas por semana ou foque primeiro em organizar sistemas e governança.' };
+    texto:'Com as tarefas informadas, o custo das ferramentas ainda supera a economia. Revise as horas por semana ou foque primeiro em organizar sistemas e cibersegurança.' };
 }
 
 // ================================================================
@@ -605,21 +648,23 @@ function recomendacoes(pilar, n, r){
     if (q.q4 === 3) rec.push('A empresa já tem API e não usa: é a automação mais barata disponível. Conectar via Make ou n8n.');
     if (q.q8 <= 2) rec.push('Os sistemas não são <b>Mobile-Friendly</b>: priorizar um <b>ERP SaaS</b> com <b>APIs REST</b> e interface pensada para o celular, seguindo as heurísticas de Nielsen (consistência, prevenção de erros e reconhecimento em vez de memorização).');
     rec.push('Definir a <b>Fonte Única da Verdade</b>: cada dado (cliente, produto, preço) tem um único sistema "dono".');
-    if (n < 80) rec.push('Criar um <b>dashboard gerencial</b> com 5 indicadores: faturamento, margem, ticket médio, inadimplência e horas economizadas.');
+    if (q.q9 <= 2) rec.push('Os números dependem de relatórios montados à mão: criar um <b>dashboard executivo com OKRs em Near Real-Time</b>, com poucos indicadores por decisão (faturamento, margem, ruptura de estoque, inadimplência e horas economizadas), seguindo a heurística estética e minimalista de Nielsen.');
+    if (q.q9 === 3) rec.push('O dashboard já existe, mas com dados do dia anterior (D-1): ligar o painel às fontes por API para chegar ao <b>Near Real-Time</b> e acompanhar os <b>OKRs</b>.');
   }
   if (pilar === 'ia'){
     const top = r.ativas[0];
     if (top) rec.push(`Começar por <b>${top.nome.toLowerCase()}</b>: é onde está o maior ganho (${num(top.liberadasMes)} h/mês).`);
     if (q.q5 <= 2) rec.push('Padronizar o uso de IA: definir <b>quais ferramentas são permitidas</b> e criar <b>modelos de prompt</b> para as tarefas comuns.');
     if (q.q6 <= 2) rec.push('Implantar <b>Human-in-the-Loop</b>: nada gerado por IA vai para cliente ou para o financeiro sem revisão humana (evita alucinações).');
-    rec.push('Preferir automações <b>Event-Driven</b> (orientadas a eventos): um gatilho, como um webhook de "pagamento aprovado", dispara a ação na hora, em vez de rotinas agendadas. Make, Zapier e n8n já aceitam webhooks.');
-    rec.push('Acompanhar as metas em um <b>painel de OKRs em Near Real-Time</b> (Looker Studio ou Power BI ligado às fontes), em vez de relatórios montados à mão.');
-    rec.push('Fazer um <b>piloto de 30 dias</b> com uma única tarefa antes de automatizar tudo.');
+    if (q.q10 <= 3) rec.push('Adotar automações <b>Event-Driven</b> (orientadas a eventos): o "pagamento aprovado" dispara um <b>webhook</b>, que aciona uma função na nuvem, dá baixa no estoque do ERP e avisa o cliente na hora, em vez de digitação ou rotinas em lote. Make, Zapier e n8n já aceitam webhooks.');
+    if (q.q11 <= 1) rec.push('<b>Evitar o Big Bang</b>: implantar por <b>piloto</b> em uma área, com <b>testes A/B</b> das telas com usuários reais, e só fazer o <b>rollout gradual</b> depois de medir a adoção.');
+    else if (q.q11 <= 3) rec.push('Fazer um <b>piloto de 30 dias</b> com uma única tarefa, com <b>testes A/B</b> e métricas de adoção, antes do <b>rollout gradual</b>.');
     rec.push('Medir o resultado: registrar <b>horas economizadas por mês</b> e comparar com o custo das ferramentas (ROI).');
   }
   if (pilar === 'seguranca'){
     if (!c.c9) rec.push('<b>Controle de Acessos (IAM):</b> centralizar login e permissões, com <b>menor privilégio</b> e <b>logs auditáveis</b> de quem acessou o quê. Sem isso, a empresa fica exposta a multas da LGPD.');
-    if (!c.c9) rec.push('Aplicar <b>mascaramento de dados</b> pessoais (ex.: mostrar só os 3 últimos dígitos do CPF), para cada pessoa ver apenas o necessário.');
+    if (!c.c11) rec.push('Aplicar <b>mascaramento de dados</b> pessoais por padrão nas telas (ex.: mostrar só os 3 últimos dígitos do CPF), para cada pessoa ver apenas o necessário.');
+    if (!c.c10) rec.push('<b>Criptografar os dados</b> em repouso e em trânsito: HTTPS em todos os sistemas, discos e backups criptografados.');
     if (!c.c1) rec.push('<b>Primeiro passo:</b> ativar <b>MFA</b> em e-mail, banco, ERP, CRM e redes sociais da empresa.');
     if (!c.c2) rec.push('Acabar com senhas compartilhadas: usar um <b>gerenciador de senhas</b> corporativo (ex: Bitwarden).');
     if (!c.c3) rec.push('Aplicar o <b>menor privilégio</b>: cada pessoa acessa só o necessário; remover acessos no dia do desligamento.');
@@ -628,9 +673,38 @@ function recomendacoes(pilar, n, r){
     if (!c.c6) rec.push('Iniciar a adequação à <b>LGPD</b>: mapear quais dados pessoais são coletados, para quê, onde ficam e quem acessa; nomear um encarregado (DPO).');
     if (!c.c7) rec.push('<b>Treinamento semestral</b> da equipe sobre golpes, phishing, senhas e privacidade.');
     if (!c.c8) rec.push('<b>Anonimizar</b> dados (trocar nome e CPF por códigos) antes de usar em IA ou relatórios.');
-    if (!rec.length) rec.push('Governança completa. Revisar a política de IA uma vez por ano e auditar os acessos a cada 6 meses.');
+    if (!c.c12) rec.push('Ativar <b>atualizações automáticas</b> de sistema operacional, navegador e sistemas: a maioria dos ataques explora falhas que já têm correção.');
+    if (!c.c13) rec.push('Instalar <b>antivírus/EDR</b> e manter o <b>firewall</b> ligado em todos os computadores, inclusive os de quem trabalha em casa.');
+    if (!c.c14) rec.push('Proteger o backup contra <b>ransomware</b>: manter uma cópia <b>offline ou imutável</b>, que o vírus não consiga criptografar, e testar a restauração.');
+    if (!c.c15) rec.push('Escrever um <b>plano de resposta a incidentes</b>: quem isola o equipamento, quem avisa os clientes e quando comunicar a ANPD em caso de vazamento.');
+    if (!rec.length) rec.push('Cibersegurança completa. Fazer um teste de restauração do backup e uma simulação de phishing por semestre, e auditar os acessos a cada 6 meses.');
   }
   return rec;
+}
+
+// Plano no formato A3: liga cada problema encontrado a um requisito e a uma solução
+function planoA3(r){
+  const q = r.resp, c = r.check, linhas = [];
+  const add = (problema, requisito, solucao, pilar) => linhas.push({ problema, requisito, solucao, pilar });
+  if (q.q3 <= 2) add('Vendas, clientes e financeiro em papel, planilhas ou sistema isolado', 'Fonte única da verdade', 'ERP SaaS como núcleo + CRM integrado', 'Sistemas');
+  if (q.q4 <= 2) add('Sistemas sem integração por API', 'Dados circulando sem digitação', 'Exigir APIs REST e integrar via No-Code', 'Sistemas');
+  if (q.q8 <= 2) add('Sistemas difíceis de usar no celular', 'Usabilidade mobile (IHC)', 'ERP SaaS mobile-first, com heurísticas de Nielsen', 'Sistemas');
+  if (q.q9 <= 3) add('Decisões sem dados em tempo real', 'Indicadores atualizados para a gestão', 'Dashboard executivo com OKRs em Near Real-Time', 'Sistemas');
+  if (q.q1 <= 2) add('Infraestrutura local, sem redundância', 'Elasticidade e alta disponibilidade', 'Nuvem pública: SaaS para gestão, PaaS/IaaS para o resto', 'Nuvem');
+  if (q.q7 > 0) add('Picos sazonais de demanda', 'Escalar sem gargalo, pagando pelo uso (OpEx)', 'IaaS/PaaS com Auto-scaling', 'Nuvem');
+  if (q.q2 <= 2) add('Backup frágil ou inexistente', 'Continuidade do negócio', 'Backup 3-2-1 automático, com teste de restauração', 'Nuvem');
+  if (q.q10 <= 3) add('Estoque e cliente atualizados à mão ou em lote', 'Processos automáticos e sem atrito', 'Automação Event-Driven: webhook → função → ERP → aviso ao cliente', 'IA & Automação');
+  if (q.q5 <= 2 || q.q6 <= 2) add('IA usada sem regras ou sem revisão', 'Uso responsável de IA', 'Política de uso de IA + Human-in-the-Loop', 'IA & Automação');
+  if (q.q11 <= 3) add('Implantação sem piloto', 'Transição de baixo risco', 'Piloto, testes A/B e rollout gradual', 'IA & Automação');
+  const top = r.ativas[0];
+  if (top) add(`Trabalho manual em ${top.nome.toLowerCase()}`, 'Eficiência operacional', top.como, 'IA & Automação');
+  if (!c.c9 || !c.c3) add('Acessos sem controle central', 'Menor privilégio e rastreabilidade', 'Cloud IAM com logs auditáveis', 'Cibersegurança');
+  if (!c.c1 || !c.c2 || !c.c7) add('Senhas frágeis e equipe exposta a phishing', 'Proteger as contas da empresa', 'MFA, gerenciador de senhas e treinamento contra golpes', 'Cibersegurança');
+  if (!c.c12 || !c.c13) add('Equipamentos sem proteção atualizada', 'Reduzir a superfície de ataque', 'Atualizações automáticas, antivírus/EDR e firewall', 'Cibersegurança');
+  if (!c.c14) add('Backup vulnerável a ransomware', 'Recuperar os dados após um ataque', 'Backup offline ou imutável, com teste de restauração', 'Cibersegurança');
+  if (!c.c15) add('Sem plano para ataques e vazamentos', 'Resposta rápida a incidentes', 'Plano de resposta a incidentes e comunicação à ANPD', 'Cibersegurança');
+  if (!c.c10 || !c.c11 || !c.c8) add('Dados pessoais expostos', 'Conformidade com a LGPD', 'Criptografia, mascaramento e anonimização de dados', 'Proteção de dados');
+  return linhas;
 }
 
 // ================================================================
@@ -734,7 +808,7 @@ function gerarLaudo(opcoes = {}){
     grafRadar.update('none');
   } else grafRadar = new Chart($('graficoRadar'), {
     type:'radar',
-    data:{ labels:['Nuvem','ERP/CRM','IA & Automação','Governança'], datasets:[
+    data:{ labels:['Nuvem','ERP/CRM','IA & Automação','Cibersegurança'], datasets:[
       { label:$('empresaNome').value.trim(), data:dadosRadar, backgroundColor:'rgba(37,99,235,0.15)', borderColor:'#2563EB', pointBackgroundColor:'#2563EB', borderWidth:2 },
       { label:'Meta Líder Digital', data:[80,80,80,80], backgroundColor:'transparent', borderColor:'#0B1220', borderDash:[5,5], pointRadius:0, borderWidth:1.5 }
     ]},
@@ -775,6 +849,17 @@ function gerarLaudo(opcoes = {}){
     </div>`).join('')
     : '<div class="px-5 py-4 text-sm" style="color:var(--muted)">Nenhuma tarefa manual marcada na etapa 2.</div>';
 
+  // Plano no formato A3 (P1 → R1 → solução)
+  const plano = planoA3(r);
+  $('lPlanoA3').innerHTML = plano.length ? plano.map((l, i) => `
+    <tr class="border-t align-top" style="border-color:#F0F2F5">
+      <td class="px-5 py-2.5"><b>P${i + 1}</b> · ${l.problema}</td>
+      <td class="px-3 py-2.5"><b>R${i + 1}</b> · ${l.requisito}</td>
+      <td class="px-3 py-2.5">${l.solucao}</td>
+      <td class="px-5 py-2.5 whitespace-nowrap" style="color:var(--muted)">${l.pilar}</td>
+    </tr>`).join('')
+    : '<tr><td colspan="4" class="px-5 py-4" style="color:var(--muted)">Nenhum problema crítico encontrado nas respostas.</td></tr>';
+
   // Guia de boas práticas (pilar mais fraco primeiro)
   const ordem = [...PILARES].sort((a, b) => r.notas[a.id] - r.notas[b.id]);
   $('lGuia').innerHTML = ordem.map(p => {
@@ -805,9 +890,9 @@ function carregarDemo(){
   $('custoHora').value = 38;
   const horas = { t1:20, t2:25, t3:8, t4:6, t5:5, t6:15 };
   TAREFAS.forEach(t => { $(t.id + '_on').checked = true; $(t.id + '_h').value = horas[t.id]; $(t.id + '_lbl').textContent = horas[t.id]; });
-  const resp = { q1:1, q2:1, q7:1, q3:2, q4:3, q8:1, q5:1, q6:1 };
+  const resp = { q1:1, q2:1, q7:1, q3:2, q4:3, q8:1, q9:1, q5:1, q6:1, q10:1, q11:0 };
   Object.entries(resp).forEach(([q, v]) => document.querySelector(`input[name="${q}"][value="${v}"]`).checked = true);
-  CONTROLES.forEach(c => $(c.id).checked = ['c2','c3'].includes(c.id));
+  CONTROLES.forEach(c => $(c.id).checked = ['c2','c3','c13'].includes(c.id));
   gerarLaudo({ rolar:true });
 }
 
