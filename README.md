@@ -2,8 +2,12 @@
 
 🔗 **Acesse o Aplicativo Online (GitHub Pages):** [Clique aqui para abrir o App](https://bonfimarthur885-ship-it.github.io/auditaia-consultoria/)
 
-## 👥 Especialistas Responsáveis (Autores)
-- **Arthur Bonfim**
+## 👥 Especialistas Responsáveis (Autores) · Equipe 2 · CloudWise Group
+- **Arthur Feldberg Bonfim**
+- **Henrique Triches**
+- **Kauana Vasconcelos**
+- **João Pizzaneli**
+- **João Pedro dos Santos Souza**
 - **Unidade Curricular:** Exploração Digital e Fundamentos Tecnológicos (Objetos de Conhecimento 05 e 06)
 
 ---
@@ -33,7 +37,8 @@ Muitas pequenas e médias empresas perdem horas toda semana com tarefas manuais 
 4. **Rodada de revisão com o simulador "Missão VarejoAtivo (A3)":** as respostas do simulador viraram melhorias nos 4 pilares: pergunta de picos sazonais com recomendação de IaaS + Auto-scaling (Pilar 1), métrica Mobile-Friendly com recomendação de ERP SaaS via APIs REST (Pilar 2), painel de eficiência operacional, OKR e automações Event-Driven (Pilar 3) e controle de Controle de Acessos com alerta de multas LGPD, IAM e mascaramento de dados (Pilar 4).
 5. **Segunda rodada com o simulador (fases 5 a 9):** cruzamos as 9 fases do simulador com o questionário e fechamos as lacunas: pergunta sobre o acompanhamento dos indicadores (Fase 5, dashboard com OKRs), pergunta sobre como as atualizações acontecem após uma venda (Fase 6, automação Event-Driven), pergunta sobre a forma de implantar mudanças (Fase 7, piloto, testes A/B e rollout gradual), controles de criptografia e mascaramento (Fase 8) e a seção **Plano no formato A3** no laudo, que liga cada problema encontrado a um requisito e a uma solução (Fase 9). As recomendações de Event-Driven, OKRs e piloto passaram a depender das respostas, em vez de aparecer sempre.
 6. **Foco em cibersegurança:** o pilar 4 virou "Cibersegurança & Proteção de Dados (LGPD)", com quatro controles novos contra as ameaças mais comuns (atualizações de segurança, antivírus/EDR e firewall, backup contra ransomware e plano de resposta a incidentes). O Plano no formato A3 ganhou linhas para senhas e phishing, equipamentos desprotegidos, ransomware e incidentes.
-7. **Principal Aprendizado:** automatizar com IA sem governança só acelera o risco. O ganho de produtividade é real e mensurável, mas depende de dados organizados (ERP/CRM integrados), infraestrutura confiável (nuvem e backup) e regras claras de segurança e LGPD.
+7. **Abas Representantes e Sobre:** a barra lateral ganhou as abas 5 (Representantes, com os cinco integrantes da Equipe 2) e 6 (Sobre, com um resumo do trabalho e o botão para a apresentação da ExpoArqTec).
+8. **Principal Aprendizado:** automatizar com IA sem governança só acelera o risco. O ganho de produtividade é real e mensurável, mas depende de dados organizados (ERP/CRM integrados), infraestrutura confiável (nuvem e backup) e regras claras de segurança e LGPD.
 
 ### Prompt Mestre adaptado (Opção C)
 ```
